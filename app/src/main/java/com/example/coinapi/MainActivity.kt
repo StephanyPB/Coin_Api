@@ -83,7 +83,7 @@ fun CoinItem(
         Image(
             painter = rememberAsyncImagePainter(coin.imagenUrl),
             contentDescription = null,
-            modifier = Modifier.size(200.dp),
+            modifier = Modifier.size(50.dp, 100.dp),
         )
         Row(
             modifier = Modifier.fillMaxWidth()
@@ -91,23 +91,17 @@ fun CoinItem(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
-                text = "${coin.descripcion}",
-                color = Color.Green,
+                text = "  ${coin.descripcion}",
+                color = Color.DarkGray,
                 fontStyle = FontStyle.Italic,
-                style = MaterialTheme.typography.body2,
+                style = MaterialTheme.typography.body1,
             )
                 Text(
-                    text = "${coin.valor}",
+                    text = "$ ${coin.valor}",
                     color = Color.Green,
                     fontStyle = FontStyle.Italic,
                     style = MaterialTheme.typography.body2,
                 )
-                Image(
-                    painter = rememberAsyncImagePainter(coin.imagenUrl),
-                    contentDescription = null,
-                    modifier = Modifier.size(200.dp),
-                )
-
         }
     }
 }
