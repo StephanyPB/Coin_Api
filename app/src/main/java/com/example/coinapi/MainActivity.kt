@@ -17,10 +17,17 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import coil.compose.rememberAsyncImagePainter
 import com.example.coinapi.data.remote.dto.Coindto
 import com.example.coinapi.model.CoinViewModel
+import com.example.coinapi.ui.components.coins.CoinItem
+import com.example.coinapi.ui.components.coins.ConsultaCoinScreen
+import com.example.coinapi.ui.components.coins.RegistroCoinScreen
 import com.example.coinapi.ui.theme.CoinApiTheme
+import com.example.coinapi.util.Screen
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -34,74 +41,38 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    ConsultaCoinScreen()
+                    MyApps()
                 }
             }
         }
     }
 }
 
-
 @Composable
-fun ConsultaCoinScreen(
-    viewModel: CoinViewModel = hiltViewModel()
-) {
-    val ScaffoldState = rememberScaffoldState()
-
-    Scaffold(
-        topBar ={
-            TopAppBar(title = { Text( "Consulta Coins") }) },
-        scaffoldState = ScaffoldState
-    ) {it
-
-        val state = viewModel.state.value
-
-        Column(modifier = Modifier.fillMaxSize()) {
-            LazyColumn(modifier = Modifier.fillMaxSize()) {
-                items(state.exchange) { exchange ->
-                    CoinItem(coin = exchange, {})
-                }
-            }
-
-            if (state.isLoading)
-                CircularProgressIndicator()
-        }
-    }
-}
-
-
-@Composable
-fun CoinItem(
-    coin:Coindto,
-    onClick : (Coindto) -> Unit
-) {
-    Column(modifier = Modifier
-        .fillMaxWidth()
-        .clickable { onClick(coin) }
-        .padding(16.dp)
-    ) {
-        Image(
-            painter = rememberAsyncImagePainter(coin.imagenUrl),
-            contentDescription = null,
-            modifier = Modifier.size(50.dp, 100.dp),
-        )
-        Row(
-            modifier = Modifier.fillMaxWidth()
-                .height(30.dp).padding(2.dp),
-            horizontalArrangement = Arrangement.SpaceBetween
+fun MyApps() {
+    CoinApiTheme {
+        Surface(
+            modifier = Modifier.fillMaxSize(),
+            color = MaterialTheme.colors.background
         ) {
-            Text(
-                text = "  ${coin.descripcion}",
-                color = Color.DarkGray,
-                fontStyle = FontStyle.Italic,
-                style = MaterialTheme.typography.body1,
-            )
-                Text(
-                    text = "$ ${coin.valor}",
-                    color = Color.Green,
-                    fontStyle = FontStyle.Italic,
-                    style = MaterialTheme.typography.body2,
-                )
+            val navHostController = rememberNavController()
+
+            NavHost(navController = navHostController, startDestination = Screen.ConsutaCoinScreen.route) {
+                composable(route = Screen.ConsutaCoinScreen.route) {
+                    ConsultaCoinScreen(navHostController = navHostController)
+                }
+                composable(route = Screen.RegistroCoinScreen.route){
+                    RegistroCoinScreen(navHostController = navHostController)
+                }
+            }
         }
+    }
+}
+
+@Preview(showBackground = true, showSystemUi = true)
+@Composable
+fun DefaultPreview() {
+    CoinApiTheme {
+        MyApps()
     }
 }
